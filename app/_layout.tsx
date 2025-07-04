@@ -1,29 +1,50 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient'
+import { Slot } from 'expo-router'
+import React from 'react'
+import {  StyleSheet, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
+function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    <SafeAreaView style={styles.container}>
+      
+<LinearGradient 
+colors={['#0f172a', '#1e293b']}
+start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+style={styles.contentContainer}
+>
+
+   
+      
+        <Slot />
+      
+</LinearGradient>
+    </SafeAreaView>
+  )
 }
+
+// const {height} = Dimensions.get('window')
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width:'100%',
+    backgroundColor:'#0f172a',
+    // justifyContent:'center',
+    alignItems:'center'
+  },
+ 
+  
+  contentContainer: {
+    flex: 1,
+    width:'100%',
+    alignItems:'center',
+    height:'100%',
+    padding:20
+    // padding: 20,
+  },
+})
+
+export default RootLayout
