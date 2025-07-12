@@ -17,9 +17,9 @@ export default function HomeRoot() {
   const [inputValue, setInputValue] = useState("");
   const [data,setData] = useState<Task[]>([]);
   const [documentId,setDocumentId] = useState<string>('')
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  
 
-  useLoadTasks(isEnabled?'todos':'data',setData);
+  useLoadTasks('data',setData);
 
 const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
 
@@ -30,7 +30,7 @@ const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
       style={styles.container}
     >
        <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}>{isEnabled ? 'Todo App' :'Goal Tracker'}</Text>
+            <Text style={styles.headerTitle}>{'Goal Tracker'}</Text>
           </View>
 
 
@@ -39,25 +39,14 @@ const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
         setInputValue={setInputValue}
         setData={setData}
         data={data}
-        isEnabled={isEnabled}
+     
       />
 
     
     
-      <FlatListComponent data={data} setData={setData} setId={setDocumentId} isEnabled={isEnabled}/>
+      <FlatListComponent data={data} setData={setData} setId={setDocumentId} />
     
-      <View style={styles.container1}>
      
-      <ToggleSwitch
-        value={isEnabled}
-        onToggle={() => setIsEnabled(prev => !prev)}
-        size={30}
-        onColor="#fff"
-        offColor="#333"
-        thumbColor="#fff"
-      />
-    </View>
-    
     </KeyboardAvoidingView>
     
   )

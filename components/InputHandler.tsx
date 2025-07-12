@@ -4,7 +4,7 @@ import ButtonMain from './Button'
 import { addTaskProps } from '@/Types/task'
 import { addTask } from '@/utils'
 
-export function InputHandler({inputValue,setInputValue,setData,data,isEnabled}:addTaskProps) {
+export function InputHandler({inputValue,setInputValue,setData,data}:addTaskProps) {
   return (
 
      <View style={styles.inputContainer}>
@@ -14,7 +14,7 @@ export function InputHandler({inputValue,setInputValue,setData,data,isEnabled}:a
           onChangeText={setInputValue}
           placeholder="Add a task"
         />
-        <ButtonMain label="Add Task" theme='primary' onPress={()=> addTask({inputValue,setInputValue,setData,data,isEnabled})} />
+        <ButtonMain label="Add Task" theme='primary' onPress={()=> addTask({inputValue,setInputValue,setData,data})} />
       </View>
   )
 }

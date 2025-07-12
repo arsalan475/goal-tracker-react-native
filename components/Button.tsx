@@ -8,7 +8,6 @@ type Props = {
   theme?: string;
   onPress? : (id?:number) => void;
   id?:number,
-  isEnabled?:boolean
   background?:string
 };
 
@@ -72,7 +71,7 @@ export default function ButtonMain({ label, theme,onPress,id ,background}: Props
     <View style={styles.buttonContainer}>
 
        {
-    id && <Link href={{pathname:'/(Home)/[id]',params:{id:id.toString()}}} >
+    id && <Link href={{pathname:'/(Home)/calender/[id]',params:{id:id.toString()}}} >
 
 
 

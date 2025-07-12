@@ -10,7 +10,7 @@ type updateProp ={
     id: number;
     data:Task[];
     setData: React.Dispatch<React.SetStateAction<Task[]>>,
-    isEnabled?:boolean
+  
 }
 
     

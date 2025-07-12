@@ -11,39 +11,17 @@ export const addTask = ({inputValue,setInputValue,setData,data,isEnabled}:addTas
 
     if (!inputValue.trim()) return;
 
-let newTask;
-
-if(!isEnabled){
-  
-      newTask  = {
+let newTask  = {
         id: Date.now(),
         inputValue: inputValue,
       };
 
-}else{
-
-  
-        newTask  = {
-          id: Date.now(),
-          inputValue: inputValue,
-          isCompleted:false,
-          importance:'Medium',
-          power:10
-        };
-
-
-}
-
-
-
-
-  
    
     
     const updatedData = [...data, newTask];
   
 
     setData(updatedData)
-    storeData(isEnabled? 'todos' : 'data',updatedData);
+    storeData('data',updatedData);
     setInputValue('');
   };

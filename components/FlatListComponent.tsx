@@ -10,11 +10,11 @@ type props = {
     data: Task[];
     setData: React.Dispatch<React.SetStateAction<Task[]>>
     setId: React.Dispatch<React.SetStateAction<string>>
-    isEnabled: boolean,
+  
 }
-export function FlatListComponent({data,setData,setId,isEnabled}:props) {
+export function FlatListComponent({data,setData,setId}:props) {
 
-    const [priority, setPriority] = useState<Priority>(Priority.Medium);
+   
 
   return (
    <FlatList
@@ -22,7 +22,7 @@ export function FlatListComponent({data,setData,setId,isEnabled}:props) {
            
            keyExtractor={item => item.id.toString()}
           //  renderItem={({item,index}) => RenderItem({ ...item,index,data,setData,setId,isEnabled})}
-           renderItem={({item,index}) => RenderItem({ ...item,index,data,setData,setId,isEnabled ,priority ,setPriority})}
+           renderItem={({item,index}) => RenderItem({ ...item,index,data,setData,setId})}
           //  ListEmptyComponent={<Text style={{ textAlign: 'center',color:'#f7f7f7' }}>No tasks yet.</Text>}
          />
   )
