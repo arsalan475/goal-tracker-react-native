@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, KeyboardAvoidingView, Platform, View,Text, Dimensions } from "react-native";
+import { StyleSheet, KeyboardAvoidingView, Platform, View,Text, Dimensions, ActivityIndicator } from "react-native";
 import '../global.css'
 
 
@@ -19,7 +19,15 @@ export default function HomeRoot() {
   const [documentId,setDocumentId] = useState<string>('')
   
 
-  useLoadTasks('data',setData);
+
+  
+const { loading } = useLoadTasks('data', setData);
+
+if (loading) {
+  return <ActivityIndicator />;
+}
+
+  
 
 const keyboardBehavior = Platform.OS === 'ios' ? 'padding' : undefined;
 
