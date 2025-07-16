@@ -63,7 +63,7 @@ export default function BadgeList({ streakArray, docId }: Props) {
   useEffect(() => {
     const run = async () => {
       const result = getLongestStreak(streakArray, docId);
-      const allEarned = result.achievements;
+      const allEarned = result.achivements;
       const seenBadges = await getSeenBadgeIds(docId);
       setSeen(seenBadges);
       setEarned(allEarned);

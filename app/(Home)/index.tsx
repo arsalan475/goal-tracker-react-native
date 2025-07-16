@@ -24,7 +24,20 @@ export default function HomeRoot() {
 const { loading } = useLoadTasks('data', setData);
 
 if (loading) {
-  return <ActivityIndicator />;
+  return <View
+  style={{
+    position:'absolute',
+    top:'50%',
+    left:'50%',
+    transform: [{translateY: '-50%'}],
+  }}
+  >
+<Text>
+
+  
+  <ActivityIndicator  size={"large"}/>;
+</Text>
+  </View>
 }
 
   

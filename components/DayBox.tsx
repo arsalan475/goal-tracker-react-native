@@ -29,12 +29,12 @@ function DayBox({streak,day,month,date,id}:dayBoxProp) {
    <LinearGradient colors={
 
                     
-                       isToday(day,month )&& isCompleted(date,streak,id).ok ? ['blue','#129'] :
-                       isToday(day,month) ? ['#facc15','yellow']:
+                       isToday(day,month ) && isCompleted(date,streak,id).ok ? ['blue','#129'] :
+                       isToday(day,month) ? ['#facc13','yellow']:
    
-                       isPast(day,month) && isCompleted(date,streak,id).ok ? ['cyan','skyblue'] :
+                       isPast(day,month) && isCompleted(date,streak,id).ok ? ['blue','#129',] :
                        
-                       ['#4a5568', '#2d3748']
+                       ['#333', '#2d3748']
                        
                        }
                        start={{ x: 0, y: 0 }}
@@ -42,7 +42,7 @@ function DayBox({streak,day,month,date,id}:dayBoxProp) {
                        
     style={[
        styles.dayBox,
-       isCommented(date,streak,id) && {borderBottomWidth:1,borderColor:'white',padding:4,shadowOffset:{width:0,height:2},shadowColor: '#fff',
+       isCommented(date,streak,id) && {borderBottomWidth:5,borderColor:'white',padding:2,shadowOffset:{width:0,height:2},shadowColor: '#fff',
     shadowOpacity: 0.5,},
        // isToday(day,month) && styles.todayBox,
        // isCompleted(date,id) && styles.completedBox,
@@ -90,4 +90,4 @@ fontSize:12
   },
 })
 
-export default DayBox
+export default React.memo(DayBox);

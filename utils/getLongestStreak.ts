@@ -71,7 +71,7 @@ export default function getLongestStreak(
       longestStreak: 0,
       currentStreak: 0,
       lastLongest: [0],
-      achievements: [],
+      achivements: [],
       nextBadge: {
         name: badges[0].name,
         icon: badges[0].icon,
@@ -83,7 +83,7 @@ export default function getLongestStreak(
   let longestStreak = 1;
   let currentStreak = 1;
   let lastLongest = [0];
-  const achievements: Badge[] = [];
+  const achivements: Badge[] = [];
   const awardedBadges = new Set<number>();
 
   for (let i = 1; i < uniqueDates.length; i++) {
@@ -105,7 +105,7 @@ export default function getLongestStreak(
 
     badgeThresholds.forEach((threshold, index) => {
       if (longestStreak >= threshold && !awardedBadges.has(threshold)) {
-        achievements.push(badges[index]);
+        achivements.push(badges[index]);
         awardedBadges.add(threshold);
       }
     });
@@ -124,7 +124,7 @@ export default function getLongestStreak(
     currentStreak,
     longestStreak,
     lastLongest,
-    achievements,
+    achivements,
     nextBadge,
   };
 }

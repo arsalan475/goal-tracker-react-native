@@ -1,7 +1,7 @@
-import { StyleSheet, View, Pressable, Text, Dimensions, Keyboard } from 'react-native';
+import { StyleSheet, View, Pressable, Text, Dimensions, Keyboard, TouchableOpacity } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 
 type Props = {
   label?: string;
@@ -17,6 +17,9 @@ const  screen = width > 700 ? true : false
 
 
 export default function ButtonMain({ label, theme,onPress,id ,background}: Props) {
+
+  const router = useRouter()
+
   if (theme === 'primary') {
     return (
       <View
@@ -71,16 +74,18 @@ export default function ButtonMain({ label, theme,onPress,id ,background}: Props
     <View style={styles.buttonContainer}>
 
        {
-    id && <Link href={{pathname:'/(Home)/calender/[id]',params:{id:id.toString()}}} >
+    // id && <Link href={{pathname:'/(Home)/calender/[id]',params:{id:id.toString()}}} >
 
 
 
-      <View style={styles.button}>
+      <TouchableOpacity style={styles.button}
+      onPress={()=> router.push(`/calender/${id}`)}
+      >
           <Text style={styles.buttonLabel}>{label}</Text>
                             <FontAwesome name="archive" size={12} color="#fff" style={styles.buttonIcon} />
 
-      </View>
-      </Link>
+      </TouchableOpacity>
+      // {/* </Link> */}
     }
     
     </View>

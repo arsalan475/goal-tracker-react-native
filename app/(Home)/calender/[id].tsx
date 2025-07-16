@@ -1,11 +1,13 @@
 // import CopyBox from '@/components/CopyBox';
+import { FlashList } from '@shopify/flash-list';
 import { getData } from "@/utils";
 import getLongestStreak from "@/utils/getLongestStreak";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -27,6 +29,10 @@ import SelectMark from "@/components/SelectMark";
 import WeeksBox from "@/components/ui/WeeksBox";
 import BadgeList from "@/components/BadgeList";
 import { useSessionStore } from "@/app/store/useSessionStore";
+import { addSeenBadgeId, getSeenBadgeIds } from "@/utils/badgeStorage";
+import Badge3DModal from "@/components/Badge3dModel";
+import { FlatList } from 'react-native';
+// make sure this is imported
 
 const monthNames = [
   "January",
@@ -71,7 +77,7 @@ const Calendar = () => {
   const [streak, setStreak] = useState<streakProp[]>([]);
   const [visible, setIsVisible] = useState<boolean>(false);
   const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0, day: 0 });
-  
+
   const [showStats, setShowStats] = useState(true);
   const [streakStats, setStreakStats] = useState<StreakStats>({
     longestStreak: 0,
@@ -79,7 +85,7 @@ const Calendar = () => {
     lastLongest: [0],
     achivements: [],
   });
-  
+
   const [comment, setComment] = useState<string>("");
   const [quote, setQuote] = useState<string>("");
   const [tickStyle, setTickStyle] = useState<string>("✔");
@@ -89,20 +95,55 @@ const Calendar = () => {
   const [month, setMonth] = useState<number>(new Date().getMonth());
   const [currentGoalData, setCurrentGoalData] = useState<dataProp[]>([]);
 
-const hasShownQuote = useSessionStore((state) => state.hasShownQuote);
+const totalDays = useMemo(() => getDateByMonth(month).getDate(), [month]);
+const currentMonthName = useMemo(() => monthNames[getDateByMonth(month).getMonth()], [month]);
+
+const firstDayOfMonth = useMemo(() => getDateByMonth(month, 1).getDay(), [month]);
+
+
+
+
+const [currentBadge, setCurrentBadge] = useState<any>(null);
+  const hasShownQuote = useSessionStore((state) => state.hasShownQuote);
   const setHasShownQuote = useSessionStore((state) => state.setHasShownQuote);
 
   const [showQuote, setShowQuote] = useState(false);
- useEffect(() => {
+  
+  
+
+// Add inside Calendar component:
+const handleMarkDate = useCallback(
+  (day: number) => {
+    markDate({
+      streak,
+      month,
+      day,
+      id,
+      restriction,
+      tickStyle,
+      setStreak,
+      setStreakStats,
+      setCurrentBadge,
+    });
+  },
+  [streak, month, id, restriction, tickStyle]
+);
+
+  
+  
+  useEffect(() => {
     if (!hasShownQuote) {
       setShowQuote(true);
       setHasShownQuote(true); // ✅ Mark quote as shown for session
     }
   }, []);
 
+
+
+
+
   useEffect(() => {
     (async () => {
-    
       const quotes = await loadQuotes();
       const random = quotes[Math.floor(Math.random() * quotes.length)];
       setQuote(random);
@@ -134,17 +175,41 @@ const hasShownQuote = useSessionStore((state) => state.hasShownQuote);
     loadData();
   }, [id]);
 
-  const totalDays = getDateByMonth(month).getDate();
-  const currentMonthName = monthNames[getDateByMonth(month).getMonth()];
+  // const totalDays = getDateByMonth(month).getDate();
+  // const currentMonthName = monthNames[getDateByMonth(month).getMonth()];
 
-  const firstDayOfMonth = getDateByMonth(month, 1).getDay();
+  // const firstDayOfMonth = getDateByMonth(month, 1).getDay();
+
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { achivements } = getLongestStreak(streak, id.toString());
+  //     const seen = await getSeenBadgeIds(id.toString());
+
+  //     const newBadge = achivements?.find((b) => !seen.includes(b.id));
+  //     if (newBadge) {
+  //       setCurrentBadge(newBadge);
+  //       await addSeenBadgeId(id.toString(), newBadge.id);
+  //     }
+  //   })();
+  //   console.log(currentBadge);
+  // }, [streak]);
+
+  const closeModal = () => {
+    setCurrentBadge(null);
+  };
 
   return (
     <View style={styles.body}>
-      <View style={{display:'none'}}>
+      {currentBadge && (
+        <Badge3DModal
+          visible
+          onClose={closeModal}
+          icon={<Text style={{ fontSize: 60 }}>{currentBadge.icon}</Text>}
+          title={`🎉 New Badge: ${currentBadge.name}`}
+        />
+      )}
 
-       <BadgeList streakArray={streak} docId={String(id)}/>
-      </View>
       <View
         style={{
           flex: 1,
@@ -165,63 +230,64 @@ const hasShownQuote = useSessionStore((state) => state.hasShownQuote);
       </View>
 
       {showQuote && <AnimatedModel quote={quote} />}
+      
       <CalenderHeading>{currentMonthName}</CalenderHeading>
       <CalenderSubHeading>{currentGoalData[0]?.inputValue}</CalenderSubHeading>
 
+
       <WeeksBox />
 
-      <View style={styles.dayContainer}>
-        {Array.from({ length: firstDayOfMonth }).map((_, index) => (
-          <View
-            key={`empty-${index}`}
-            style={[styles.dayBox, { opacity: 0 }]}
-          ></View>
-        ))}
-        {/* Calendar days */}
-        {[...Array(totalDays)].map((_, index) => {
-          const day = index + 1;
 
-          let date: string = getDateByMonth(month, day).toLocaleDateString();
 
-          return (
-            <TouchableOpacity
-              key={index}
-              onLongPress={(event) =>
-                showComment({
-                  event,
-                  streak,
-                  month,
-                  day,
-                  id,
-                  setComment,
-                  setTouchPosition,
-                  setIsVisible,
-                })
-              }
-              onPress={() =>
-                markDate({
-                  streak,
-                  month,
-                  day,
-                  id,
-                  restriction,
-                  tickStyle,
-                  setStreak,
-                  setStreakStats,
-                })
-              }
-            >
-              <DayBox
-                streak={streak}
-                day={day}
-                month={month}
-                date={date}
-                id={id}
-              />
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+
+  <View 
+                      style={styles.dayContainer}         
+              
+              >
+                 {Array.from({ length: firstDayOfMonth }).map((_, index) => (
+                          <View key={`empty-${index}`} style={[styles.dayBox,{opacity:0}]}></View>
+                        ))}
+            {/* Calendar days */}
+            {[...Array(totalDays)].map((_, index) => {
+              const day = index + 1;
+          
+              let date : string = getDateByMonth(month,day).toLocaleDateString()
+
+           
+
+              return (
+                 <TouchableOpacity key={index}
+      onLongPress={(event) =>
+        showComment({
+          event,
+          streak,
+          month,
+          day,
+          id,
+          setComment,
+          setTouchPosition,
+          setIsVisible,
+        })
+      }
+      onPress={() => handleMarkDate(day)}
+      
+      >
+        <DayBox
+          streak={streak}
+          day={day}
+          month={month}
+          date={date}
+          id={id}
+          />
+      </TouchableOpacity>
+              );
+            })}
+          </View>
+
+
+  
+          
+
       <SelectMark setTickStyle={setTickStyle} tickStyle={tickStyle} />
 
       <View
@@ -258,21 +324,17 @@ const hasShownQuote = useSessionStore((state) => state.hasShownQuote);
       >
         <TextInput
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={6}
           textAlignVertical="top"
           editable={
             !isToday(month, touchPosition.day) && restriction ? false : true
           }
-          selectTextOnFocus={
-            !isToday(month, touchPosition.day) && restriction ? false : true
-          }
+        
           value={comment}
           onChangeText={setComment}
           style={styles.inputTextArea}
         />
       </EmojiPicker>
-
-       
     </View>
   );
 };
@@ -283,7 +345,7 @@ const boxSize = width / 7;
 const boxWidth = boxSize - 10;
 const styles = StyleSheet.create({
   body: {
-    flexGrow: 6,
+    flexGrow: 1,
     paddingVertical: 12,
     paddingHorizontal: 0,
     width: "100%",

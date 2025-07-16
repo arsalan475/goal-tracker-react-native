@@ -30,7 +30,7 @@ style={styles.taskItem}
               color:'#fff',borderBottomWidth:1,borderBottomColor:'#fff',padding:5
               }]}
               >
-            {data[index].inputValue} {data[index].isCompleted && ' ✔'}
+            {data[index].inputValue} 
             </Text>
           <View style={styles.buttonRow}>
         

@@ -19,7 +19,7 @@ type prop = PropsWithChildren<{
 
 function EmojiPicker({ children, isVisible, onClose, touchPosition,isLocked }: prop) {
   const screen = Dimensions.get('window');
-  let modalMaxWidth = screen.width * 0.5 ;
+  let modalMaxWidth = screen.width * 0.9 ;
   modalMaxWidth = screen.width > 1000 ? 500 : modalMaxWidth // 70% of screen width
   const modalMaxHeight = screen.height * 0.5 // 30% of screen height
   const modalPadding = 12;
@@ -27,14 +27,14 @@ function EmojiPicker({ children, isVisible, onClose, touchPosition,isLocked }: p
   // Avoid overflow by checking screen bounds
   const adjustedX = Math.min(touchPosition.x, screen.width - modalMaxWidth - modalPadding);
   const adjustedY = Math.min(touchPosition.y, screen.height - modalMaxHeight - modalPadding);
-
+console.log(adjustedY)
   return (
     <Modal animationType="fade" visible={isVisible} transparent={true} >
       <View
         style={[
           styles.modalContent,
           {
-            top: adjustedY,
+            top: 170,
             left: adjustedX,
             width:modalMaxWidth,
             maxHeight: modalMaxHeight,
@@ -42,19 +42,19 @@ function EmojiPicker({ children, isVisible, onClose, touchPosition,isLocked }: p
         ]}
       >
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>
-            <Text style={{fontWeight:700 ,marginHorizontal:5}}>
-              ({touchPosition.day })
+          <View style={styles.title}>
+            <Text style={{fontWeight:700,color: '#fff',fontSize: 10,marginHorizontal:15}}>
+              Date {touchPosition.day }
             </Text>
-            <Text style={{marginHorizontal:5,fontSize:modalMaxWidth > 200 ? 12 :8}}>
+            <Text style={{marginHorizontal:15,color:'#fff',fontSize:modalMaxWidth > 200 ? 12 :8}}>
               Type a Comment 
               </Text>
             {isLocked ? 
-            <MaterialIcons name="lock" size={15} color="orangered" />
+            <MaterialIcons name="lock" size={20} color="orangered" />
             :
-            <MaterialIcons name="lock-open" size={15} color="gold" />
+            <MaterialIcons name="lock-open" size={20} color="gold" />
             }
-            </Text>
+            </View>
           <Pressable onPress={onClose}>
             <MaterialIcons name="close" size={20} color="#fff" />
             
@@ -91,16 +91,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 8,
     marginBottom: 10,
+
   },
   title: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '600',
+    
     display:'flex',
+    flexDirection:'row',
     alignItems:'center',
-    justifyContent:'center',
+    justifyContent:'space-between',
     // marginHorizontal:10
-
+width:'90%'
   },
   content: {
     paddingHorizontal: 4,

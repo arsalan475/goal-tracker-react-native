@@ -10,3 +10,6 @@ export const useSessionStore = create<SessionState>((set) => ({
   hasShownQuote: false,
   setHasShownQuote: (value) => set({ hasShownQuote: value }),
 }));
+
+
+

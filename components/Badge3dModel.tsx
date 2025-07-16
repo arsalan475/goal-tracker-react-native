@@ -14,7 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 type Props = {
   visible: boolean;
   onClose: () => void;
-  icon: React.ReactNode;
+  icon:string | React.ReactNode;
   title: string;
 };
 
